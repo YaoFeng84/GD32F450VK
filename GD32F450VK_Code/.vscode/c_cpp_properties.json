@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/../../**",
+                "${workspaceFolder}/CommHead",
+                "${workspaceFolder}/CommHead/CMSIS",
+                "${workspaceFolder}/CommHead/Peripherals",
+                "${workspaceFolder}/CommHead/USB"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "USE_STDPERIPH_DRIVER",
+                "GD32F450",
+                "USE_USB_FS",
+                "USE_USBFS"
+            ],
+            "compilerPath": "F:\\YF\\MyTools\\mingw64\\bin\\gcc.exe",
+            "cStandard": "c17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}

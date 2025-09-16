@@ -1,0 +1,3 @@
+file(REMOVE_RECURSE
+  "F:/YF/MyTools/MyCodeLib/GD32F450VK/GCC_A/bin/GD32F450VK.a"
+)

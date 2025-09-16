@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Parameters>
+  <ProJ>
+    <Parameter Name="P0" Value0="项目名称" Value1="GD32F450VK" />
+    <Parameter Name="P1" Value0="编译平台" Value1="Windows系统" />
+    <Parameter Name="P2" Value0="构建类型" Value1="静态库文件" />
+    <Parameter Name="P3" Value0="编译工具链类型" Value1="ARG_GCC" />
+    <Parameter Name="P4" Value0="编译工具链路径" Value1="F:\YF\MyTools\MyBin\gcc-arm-none-eabi-10.3-2021.10-win32\bin" />
+    <Parameter Name="P5" Value0="CMakeLists文件字符编码" Value1="UTF8" />
+    <Parameter Name="P6" Value0="C语法版本" Value1="C99" />
+    <Parameter Name="P7" Value0="Cpp语法版本" Value1="Cpp11" />
+  </ProJ>
+  <Module_General>
+    <Parameter Name="P0" Value0="链接脚本" Value1="" />
+  </Module_General>
+  <Module_Item>
+    <Parameter Name="P0" Value0="CPU架构" Value1="-mcpu=cortex-m4" />
+    <Parameter Name="P1" Value0="CPU指令集" Value1="-mthumb" />
+    <Parameter Name="P2" Value0="不使用系统" Value1="-specs=nosys.specs" />
+    <Parameter Name="P3" Value0="所有警告" Value1="-Wall" />
+    <Parameter Name="P4" Value0="宏定义" Value1="-DGD32F450" />
+    <Parameter Name="P5" Value0="宏定义" Value1="-DUSE_DDL_DRIVER" />
+    <Parameter Name="P6" Value0="宏定义" Value1="-DUSE_USB_FS" />
+  </Module_Item>
+  <File_Src>
+    <Parameter Name="P0" Value0="..\GD32F450VK_Code\DRI_CLK.c" />
+    <Parameter Name="P1" Value0="..\GD32F450VK_Code\DRI_ComDriver.c" />
+    <Parameter Name="P2" Value0="..\GD32F450VK_Code\DRI_ExINT.c" />
+    <Parameter Name="P3" Value0="..\GD32F450VK_Code\DRI_Flash.c" />
+    <Parameter Name="P4" Value0="..\GD32F450VK_Code\DRI_GPIO.c" />
+    <Parameter Name="P5" Value0="..\GD32F450VK_Code\DRI_RCU.c" />
+    <Parameter Name="P6" Value0="..\GD32F450VK_Code\DRI_Systick.c" />
+    <Parameter Name="P7" Value0="..\GD32F450VK_Code\DRI_USARTn.c" />
+    <Parameter Name="P8" Value0="..\GD32F450VK_Code\DRI_USB.c" />
+    <Parameter Name="P9" Value0="..\GD32F450VK_Code\DRI_CAN.c" />
+    <Parameter Name="P10" Value0="..\GD32F450VK_Code\CommSrc\system_gd32f4xx.c" />
+    <Parameter Name="P11" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_adc.c" />
+    <Parameter Name="P12" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_can.c" />
+    <Parameter Name="P13" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_crc.c" />
+    <Parameter Name="P14" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_ctc.c" />
+    <Parameter Name="P15" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_dac.c" />
+    <Parameter Name="P16" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_dbg.c" />
+    <Parameter Name="P17" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_dci.c" />
+    <Parameter Name="P18" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_dma.c" />
+    <Parameter Name="P19" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_enet.c" />
+    <Parameter Name="P20" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_exmc.c" />
+    <Parameter Name="P21" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_exti.c" />
+    <Parameter Name="P22" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_fmc.c" />
+    <Parameter Name="P23" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_fwdgt.c" />
+    <Parameter Name="P24" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_gpio.c" />
+    <Parameter Name="P25" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_i2c.c" />
+    <Parameter Name="P26" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_ipa.c" />
+    <Parameter Name="P27" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_iref.c" />
+    <Parameter Name="P28" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_misc.c" />
+    <Parameter Name="P29" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_pmu.c" />
+    <Parameter Name="P30" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_rcu.c" />
+    <Parameter Name="P31" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_rtc.c" />
+    <Parameter Name="P32" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_sdio.c" />
+    <Parameter Name="P33" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_spi.c" />
+    <Parameter Name="P34" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_syscfg.c" />
+    <Parameter Name="P35" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_timer.c" />
+    <Parameter Name="P36" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_tli.c" />
+    <Parameter Name="P37" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_trng.c" />
+    <Parameter Name="P38" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_usart.c" />
+    <Parameter Name="P39" Value0="..\GD32F450VK_Code\CommSrc\Peripherals\gd32f4xx_wwdgt.c" />
+    <Parameter Name="P40" Value0="..\GD32F450VK_Code\CommSrc\USB\drv_usb_core.c" />
+    <Parameter Name="P41" Value0="..\GD32F450VK_Code\CommSrc\USB\drv_usb_dev.c" />
+    <Parameter Name="P42" Value0="..\GD32F450VK_Code\CommSrc\USB\drv_usbd_int.c" />
+    <Parameter Name="P43" Value0="..\GD32F450VK_Code\CommSrc\USB\usbd_core.c" />
+    <Parameter Name="P44" Value0="..\GD32F450VK_Code\CommSrc\USB\usbd_enum.c" />
+    <Parameter Name="P45" Value0="..\GD32F450VK_Code\CommSrc\USB\usbd_transc.c" />
+  </File_Src>
+  <File_H>
+    <Parameter Name="P0" Value0="..\..\..\MyCodeLib" />
+    <Parameter Name="P1" Value0="..\GD32F450VK_Code" />
+    <Parameter Name="P2" Value0="..\GD32F450VK_Code\CommHead" />
+    <Parameter Name="P3" Value0="..\GD32F450VK_Code\CommHead\CMSIS" />
+    <Parameter Name="P4" Value0="..\GD32F450VK_Code\CommHead\Peripherals" />
+    <Parameter Name="P5" Value0="..\GD32F450VK_Code\CommHead\USB" />
+  </File_H>
+  <Path_DGV_Path>
+    <Parameter Name="P0" Value0=".\bin" />
+  </Path_DGV_Path>
+  <Windows_DGV_Path>
+    <Parameter Name="P0" Value0=".\build" />
+  </Windows_DGV_Path>
+</Parameters>
