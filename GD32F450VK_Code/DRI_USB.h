@@ -7,6 +7,46 @@ extern "C" {
 
 #include "DRI_ComDriver.h"
 
+/**
+ * @brief
+ *     P0Setup数据处理回调函数
+ * @param  u8*  待处理数据首地址
+ * @param  u16  待处理数据字节数
+ * @param  u8*  返回数据首地址
+ * @param  u16* 输入(返回数据空间字节数) 输出(实际返回/读取的字节数)
+ * @return s8   小于0:表示处理错误
+ *              等于0:表示命令未处理
+ *                  1:表示命令已处理，需要将返回的数据通过P0端口发送给主机
+ *                  2:表示命令已处理，需要将P0端口的OUT数据读取出来
+ */
+typedef s8(*DRI_USB_P0SetupProcessFunc)(u8*,u16,u8*,u16*);
+typedef void(*DRI_USB_ReceDataFunc)(u8*,u16);
+typedef s32(*DRI_USB_P0OutProcessFunc)(u8*,u16);//P0端口OUT数据的处理回调函数指针(OUT数据首地址,OUT数据字节数)返回值:实际处理字节数
+
+typedef struct
+{
+     u8 IntPri;                    //中断优先级(0~15)
+     DRI_USB_ReceDataFunc ReceDataFunc;//USB收到数据回调函数指针
+     DRI_USB_P0SetupProcessFunc P0SetupProcess;//P0枚举处理回调函数指针
+     DRI_USB_P0OutProcessFunc P0OutProcess;//P0端口OUT数据处理回调函数指针
+}DRI_USBCnfType;
+
+typedef struct
+{
+     u8 OutEP_Num;               //输出端点号
+     u8 OutEP_Type;            //输出端点类型(0:控制端点 1:中断端点 2:批量端点 3:同步端点)
+     u16 OutEP_MaxPacketSize;      //输出端点最大包字节数
+     //
+     u8 InEP_Num;                 //输入端点号
+     u8 InEP_Type;             //输入端点类型(0:控制端点 1:中断端点 2:批量端点 3:同步端点)
+     u16 InEP_MaxPacketSize;       //输入端点最大包字节数
+     //
+     u8 IntInEP_Num;             //中断输入端点号
+     u8 IntInEP_Type;           //中断输入端点类型(0:控制端点 1:中断端点 2:批量端点 3:同步端点)
+     u16 IntInEP_MaxPacketSize;    //中断输入端点最大包字节数
+     //
+     u8 P0EP_MaxPacketSize;        //P0端点最大包字节数
+}DRI_USB_EPType;//USB的端点结构体
 
 /***************************************************************************
 * 函 数 名: DRI_USB_Config

@@ -176,23 +176,16 @@ s32 DRI_Flash_ReadData(u32 radd,u8 *rd,u16 rl)
             不擦除直接写入!!!
 * 例   如:
 * 修改记录:
-*           2025-09-01 BY:YJX
+*           2025-09-22 BY:
 ***************************************************************************/
 s32 DRI_Flash_DirectWriteData(u32 wadd,u8 *wd,u16 wl)
-{//
+{
      u8 u8temp,*rp,u8i,u8data[4];
      u16 u16temp,u16wl;
-
-     if(wadd < Flash_SpaceStartAddr || wadd > Flash_SpaceEndAddr || (wadd + wl) > (Flash_SpaceEndAddr + 1))
-     {//越界了
-          return -1;
-     }
-
      u16wl = wl;//暂存wl
-
      if(wl)
-     {
-          //处理首部非4字节对齐
+     {         
+          //------------处理首部非4字节对齐
           u8temp = (u8)(wadd % 4);
           if(u8temp)
           {//首部非4字节对齐
@@ -201,29 +194,45 @@ s32 DRI_Flash_DirectWriteData(u32 wadd,u8 *wd,u16 wl)
                {
                     u8data[u8i] = rp[u8i];
                }
-               for(u8i = u8temp;u8i < 4;u8i++)
+               for(;(u8i < 4);u8i++)
                {
-                    u8data[u8i] = wd[u8i - u8temp];
+                    if(wl)
+                    {
+                         wl--;
+                         u8data[u8i] = wd[u8i - u8temp];
+                    }
+                    else
+                    {
+                         break;
+                    }
                }
+               for(;(u8i < 4);u8i++)
+               {
+                    u8data[u8i] = rp[u8i];
+               }
+               //printf("首部：写地址:0x%08x,写数据:%d,%d,%d,%d\r\n",(u32)rp,u8data[0],u8data[1],u8data[2],u8data[3]);
+               //printf("首部wl = %d\r\n",wl);
                //对一个完整且对齐的4字节进行写操作
                Flash_WriteData((u32)rp,u8data,4);
                //更新写入地址、源数据指针、写入字节数
                u8temp = 4 - u8temp;
                wadd += u8temp;
                wd += u8temp;
-               wl -= u8temp;
           }
-
-          //写入中间部分
-          u16temp = Flash_WriteData(wadd,wd,wl);
-          wadd += u16temp;
-          wd += u16temp;
-          wl -= u16temp;
-
-          //处理尾部非4字节对齐
+          //------------写入中间部分
+          if(wl >= 4) 
+          {//
+               //printf("中间:wl = %d\r\n",wl);
+               u16temp = Flash_WriteData(wadd,wd,wl);
+               wadd += u16temp;
+               wd += u16temp;
+               wl -= u16temp;
+          }          
+          //------------处理尾部非4字节对齐
           u8temp = (u8)(wl % 4);
           if(u8temp)
           {
+               //printf("尾部wl = %d\r\n",wl);
                for(u8i = 0;u8i < u8temp;u8i++)
                {
                     u8data[u8i] = wd[u8i];
@@ -234,12 +243,73 @@ s32 DRI_Flash_DirectWriteData(u32 wadd,u8 *wd,u16 wl)
                     u8data[u8i] = rp[u8i - u8temp];
                }
                //对一个完整且对齐的4字节进行写操作
+               //printf("尾部：写地址:0x%08x,写数据:%d,%d,%d,%d\r\n",(u32)wadd,u8data[0],u8data[1],u8data[2],u8data[3]);
                Flash_WriteData((u32)wadd,u8data,4);
           }
      }
-
-     return u16wl;
+     return u16wl;  
 }
+// {//
+//      u8 u8temp,*rp,u8i,u8data[4];
+//      u16 u16temp,u16wl;
+
+//      if(wadd < Flash_SpaceStartAddr || wadd > Flash_SpaceEndAddr || (wadd + wl) > (Flash_SpaceEndAddr + 1))
+//      {//越界了
+//           return -1;
+//      }
+
+//      u16wl = wl;//暂存wl
+
+//      if(wl)
+//      {
+//           //处理首部非4字节对齐
+//           u8temp = (u8)(wadd % 4);
+//           if(u8temp)
+//           {//首部非4字节对齐
+//                rp = (u8 *)(wadd - u8temp);//往前u8temp个字节，读u8temp个数据
+//                for(u8i = 0;u8i < u8temp;u8i++)
+//                {
+//                     u8data[u8i] = rp[u8i];
+//                }
+//                for(u8i = u8temp;u8i < 4;u8i++)
+//                {
+//                     u8data[u8i] = wd[u8i - u8temp];
+//                }
+//                //对一个完整且对齐的4字节进行写操作
+//                Flash_WriteData((u32)rp,u8data,4);
+//                //更新写入地址、源数据指针、写入字节数
+//                u8temp = 4 - u8temp;
+//                wadd += u8temp;
+//                wd += u8temp;
+//                wl -= u8temp;
+//           }
+
+//           //写入中间部分
+//           u16temp = Flash_WriteData(wadd,wd,wl);
+//           wadd += u16temp;
+//           wd += u16temp;
+//           wl -= u16temp;
+
+//           //处理尾部非4字节对齐
+//           u8temp = (u8)(wl % 4);
+//           if(u8temp)
+//           {
+//                for(u8i = 0;u8i < u8temp;u8i++)
+//                {
+//                     u8data[u8i] = wd[u8i];
+//                }
+//                rp = (u8 *)(wadd + u8temp);
+//                for(u8i = u8temp;u8i < 4;u8i++)
+//                {
+//                     u8data[u8i] = rp[u8i - u8temp];
+//                }
+//                //对一个完整且对齐的4字节进行写操作
+//                Flash_WriteData((u32)wadd,u8data,4);
+//           }
+//      }
+
+//      return u16wl;
+// }
 
 /// @brief 判断地址是否扇区头对齐 或 尾对齐
 /// @param addr 待判断的地址
@@ -440,6 +510,11 @@ static u16 Flash_WriteData(u32 wadd,u8 *wd,u16 wl)
 {
      u16 u16temp,u16num;
 
+     if((wadd % 4) || (wl % 4) || (wl == 0))
+     {
+          return 0; //地址不对齐或写入长度不对齐
+     }
+
      fmc_unlock();
      fmc_flag_clear(FMC_FLAG_END | FMC_FLAG_OPERR | FMC_FLAG_WPERR | FMC_FLAG_PGMERR | FMC_FLAG_PGSERR);
 
@@ -459,7 +534,7 @@ static u16 Flash_WriteData(u32 wadd,u8 *wd,u16 wl)
      
      fmc_lock();
 
-     return (u16num << 2);
+     return (u16temp << 2);
 }
 
 // //纯扇区擦除

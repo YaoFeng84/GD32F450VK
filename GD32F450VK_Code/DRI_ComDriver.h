@@ -105,7 +105,8 @@ extern void DRI_ComDriver_ResetAllPeripheral(void);
 
 /***************************************************************************
 * 函 数 名: DRI_ComDriver_EnableAllINT
-* 功能描述：使能外设总中断 函数
+* 功能描述：使能总中断 函数
+           允许所有中断（包括外设和内核中断（如SysTick、PendSV））正常响应。
 * 入口参数：
             无
 * 出口参数：
@@ -120,7 +121,8 @@ extern void DRI_ComDriver_EnableAllINT(void);
 
 /***************************************************************************
 * 函 数 名: DRI_ComDriver_DisableAllINT
-* 功能描述：禁能外设总中断 函数
+* 功能描述：禁能总中断 函数
+           屏蔽所有可屏蔽中断（包括外设中断和内核中断（如SysTick、PendSV）），仅允许NMI（不可屏蔽中断）和系统异常（如HardFault）响应。
 * 入口参数：
             无
 * 出口参数：
@@ -181,6 +183,7 @@ extern void DRI_ComDriver_CoreReset(void);
 /***************************************************************************
 * 函 数 名: DRI_ComDriver_SysReset
 * 功能描述：外设复位 函数
+          相当于 NVIC_SystemReset();
 * 入口参数：
             无
 * 出口参数：
@@ -222,132 +225,11 @@ typedef enum
      GP15 = 15u
 }PinNum;
 
-
-
 typedef enum
 {
      GDOut = 0u,//数字输出
      GDIn = 1u  //数字输入
 }PinMode;
-
-typedef enum
-{
-     ITFallEdge = 0u,//下降沿
-     ITRiseEdge = 1u,//上升沿
-     ITBothEdg = 2u //双边沿
-}INTTriggerMode;//触发模式枚举
-
-typedef struct
-{
-     PortNum portn;      //外部中断端口号
-     PinNum pinn;        //外部中断引脚号
-     INTTriggerMode tm;  //触发模式
-     u8 pri;             //中断优先级(0~15，越小优先级越高)
-     void (*cbfp)(void); //中断回调函数指针
-}ExIntCnfType;
-
-
-typedef enum
-{
-     DataBits8 = 0u,//8位数据宽度
-     DataBits9 = 1u,//9位数据宽度
-}DataBitType;
-
-typedef enum
-{
-     HalfStopBit = 0u,//半位停止位
-     OneStopBit = 1u,//1位停止位
-     OneAndHalfStopBit = 2u,//1.5位停止位
-     TwoStopBit = 3u,//2位停止位
-}StopBitType;
-
-typedef enum
-{
-     ParityNone = 0u,//无校验
-     ParityEven = 1u,//偶校验
-     ParityOdd = 2u,//奇校验
-}ParityType;
-
-typedef struct
-{
-     u8 FEnable;              //接收硬流控使能位(0:禁用 非0:使用)
-     u8 RHWFlowXonLevel;      //接收硬流控XON电平(0:低电平 非0:高电平)
-     u8 RHWFlowDefaultLevel;  //接收硬流控默认电平(0:低电平 非0:高电平)
-     PortNum RFlowcontrolp;   //接收硬流控端口号
-     PinNum RFlowcontroln;    //接收硬流控引脚号
-}RHWFlowCrl;
-
-typedef struct
-{
-//---常规配置
-     u32 bps;            //波特率(2400~921600)
-     DataBitType DataBit;//数据位
-     StopBitType StopBit;//停止位
-     ParityType  Parity; //校验模式
-     RHWFlowCrl rhwfc;   //接收硬流控
-//---中断配置
-     u8 IntPri;        //串口中断优先级(0~15，越小优先级越高，超过范围禁止中断)
-//---接收部分
-     void (*Recfp)(u8);  //接收到数据回调函数指针
-     u8 RecData_IntEnable;//接收数据中断使能(0:禁止 非0:使能)
-//---发送部分
-     void (*SendOKfp)(void);//发送完成回调函数指针
-     u8 SendOK_IntEnable;//发送完成中断使能(0:禁止 非0:使能)
-     u8 SendINTDefaultState;//发送中断默认状态(0:关闭 1:开启)
-}DRI_USARTCnfType;
-
-/**
- * @brief
- *     P0Setup数据处理回调函数
- * @param  u8*  待处理数据首地址
- * @param  u16  待处理数据字节数
- * @param  u8*  返回数据首地址
- * @param  u16* 输入(返回数据空间字节数) 输出(实际返回/读取的字节数)
- * @return s8   小于0:表示处理错误
- *              等于0:表示命令未处理
- *                  1:表示命令已处理，需要将返回的数据通过P0端口发送给主机
- *                  2:表示命令已处理，需要将P0端口的OUT数据读取出来
- */
-typedef s8(*DRI_USB_P0SetupProcessFunc)(u8*,u16,u8*,u16*);
-typedef void(*DRI_USB_ReceDataFunc)(u8*,u16);
-typedef s32(*DRI_USB_P0OutProcessFunc)(u8*,u16);//P0端口OUT数据的处理回调函数指针(OUT数据首地址,OUT数据字节数)返回值:实际处理字节数
-
-typedef struct
-{
-     u8 IntPri;                    //中断优先级(0~15)
-     DRI_USB_ReceDataFunc ReceDataFunc;//USB收到数据回调函数指针
-     DRI_USB_P0SetupProcessFunc P0SetupProcess;//P0枚举处理回调函数指针
-     DRI_USB_P0OutProcessFunc P0OutProcess;//P0端口OUT数据处理回调函数指针
-}DRI_USBCnfType;
-
-typedef struct
-{
-     u8 OutEP_Num;               //输出端点号
-     u8 OutEP_Type;            //输出端点类型(0:控制端点 1:中断端点 2:批量端点 3:同步端点)
-     u16 OutEP_MaxPacketSize;      //输出端点最大包字节数
-     //
-     u8 InEP_Num;                 //输入端点号
-     u8 InEP_Type;             //输入端点类型(0:控制端点 1:中断端点 2:批量端点 3:同步端点)
-     u16 InEP_MaxPacketSize;       //输入端点最大包字节数
-     //
-     u8 IntInEP_Num;             //中断输入端点号
-     u8 IntInEP_Type;           //中断输入端点类型(0:控制端点 1:中断端点 2:批量端点 3:同步端点)
-     u16 IntInEP_MaxPacketSize;    //中断输入端点最大包字节数
-     //
-     u8 P0EP_MaxPacketSize;        //P0端点最大包字节数
-}DRI_USB_EPType;//USB的端点结构体
-
-typedef enum
-{
-     LP_Rst    = 0u,   //深度睡眠/待机复位发生时的复位
-     WWDGT_Rst = 1u,   //窗口看门狗定时器复位发生时的复位
-     FWDGT_Rst = 2u,   //独立看门狗复位发生时的复位
-     SW_Rst    = 3u,   //软件复位发生时的复位
-     POR_Rst   = 4u,   //电源复位发生时的复位
-     EP_Rst    = 5u,   //外部引脚复位发生时的复位
-     BOR_Rst   = 6u,   //欠压复位复位发生时的复位     
-     Multiply_Rst = 7u,   //多源复位发生时的复位
-}ResetFlag;
 
 #endif
 
