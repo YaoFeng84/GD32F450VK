@@ -248,7 +248,10 @@ s8 DRI_CANx_Config(DRI_CANCnfType *cnf)
      can_parameter.trans_fifo_order = DISABLE;//发送FIFO优先级由ID决定：禁用
      can_parameter.working_mode = CAN_NORMAL_MODE;//正常模式
      can_parameter.resync_jump_width = CAN_BT_SJW_1TQ;//重新同步跳转宽度：1个时间单位
-//----------------------------     
+//----------------------------   
+     //bps = APB1 / (prescaler * (1 + time_segment_1 + time_segment_2))
+     //bps = 42 000 000 / (12 * (1 + 10 + 3)) = 250 000
+//---------------------------- 
      can_parameter.time_segment_1 = (u8s1 - 1);//CAN_BT_BS1_10TQ;//时间段1
      can_parameter.time_segment_2 = (u8s2 - 1);//CAN_BT_BS2_3TQ;//时间段2
      can_parameter.prescaler = u16prescaler;//12;//波特率分频系数
@@ -289,6 +292,7 @@ void CAN0_RX0_IRQHandler(void)
      can_receive_message_struct receive_message;
      DRI_CAN_CommunicatDataType cdt;
      //
+     can_struct_para_init(CAN_RX_MESSAGE_STRUCT, &receive_message);//初始化
      can_message_receive(CAN0, CAN_FIFO0, &receive_message);
      //
      if(CAN0_ReceCBF != NULL)
@@ -315,6 +319,7 @@ void CAN1_RX1_IRQHandler(void)
      can_receive_message_struct receive_message;
      DRI_CAN_CommunicatDataType cdt;
      //
+     can_struct_para_init(CAN_RX_MESSAGE_STRUCT, &receive_message);//初始化
      can_message_receive(CAN1, CAN_FIFO1, &receive_message);
      //
      if(CAN1_ReceCBF != NULL)
@@ -414,6 +419,7 @@ static s8 CAN_SendData(u32 canx,DRI_CAN_CommunicatDataType *data)
 {
      u8 u8i;
      can_trasnmit_message_struct transmit_message;//定义发送消息结构体
+     can_struct_para_init(CAN_TX_MESSAGE_STRUCT, &transmit_message);
      /* initialize transmit message */
      transmit_message.tx_sfid = data->FrameID;//标准帧ID
      transmit_message.tx_efid = data->FrameID;//扩展帧ID

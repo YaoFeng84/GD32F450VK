@@ -1,6 +1,10 @@
 # GD32F450VK
 GD32F450VK驱动库
 
+5、
+
+【1】、纯备份
+
 4、
 
 【1】、修复了DRI_Flash中DRI_Flash_DirectWriteData接口的bug
